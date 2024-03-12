@@ -250,3 +250,58 @@ resource "aws_instance" "backend" {
   }
 }
 ~~~
+##### Y por último vamos a crear las ips elásticas y mostrarlas
+~~~
+# Creación de ips flotantes
+# Creamos una IP elástica y la asociamos a la instancia
+
+# Balanceador de carga.
+resource "aws_eip" "load_balancer" {
+  instance = aws_instance.load_balancer.id
+}
+
+# Frontend 1 y 2
+resource "aws_eip" "ip_elastica_frontend_1" {
+  instance = aws_instance.frontend_1_terraform.id
+}
+
+resource "aws_eip" "ip_elastica_frontend_2" {
+  instance = aws_instance.frontend_2_terraform.id
+}
+
+# Backend
+resource "aws_eip" "ip_elastica_backend" {
+  instance = aws_instance.backend.id
+}
+
+# NFS
+resource "aws_eip" "ip_elastica_nfs" {
+  instance = aws_instance.nfs_server.id
+}
+
+# Mostrar contenido ip elasticas 
+output "load_balancer" {
+  value = aws_eip.load_balancer.public_ip
+}
+
+# Mostrar contenido ip elasticas 
+output "ip_elastica_frontend_1" {
+  value = aws_eip.ip_elastica_frontend_1.public_ip
+}
+
+# Mostrar contenido ip elasticas 
+output "ip_elastica_frontend_2" {
+  value = aws_eip.ip_elastica_frontend_2.public_ip
+}
+
+# Mostrar contenido ip elasticas 
+output "ip_elastica_backend" {
+  value = aws_eip.ip_elastica_backend.public_ip
+}
+
+# Mostrar contenido ip elasticas 
+output "ip_elastica_nfs" {
+  value = aws_eip.ip_elastica_nfs.public_ip
+}
+~~~
+#### Una vez hagamos el apply se nos ejecutará el main.tf y se nos crearán las instancias, grupos de seguridad e ips.
